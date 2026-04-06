@@ -321,36 +321,46 @@ document.getElementById('dSendBtn').addEventListener('click',async()=>{
   const err=document.getElementById('dErrorMsg');err.style.display='none';
   if(!fn||!em){err.textContent='Merci de renseigner votre prénom et votre e-mail.';err.style.display='block';return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent='Adresse e-mail invalide.';err.style.display='block';return;}
-  const p={_subject:`Nouvelle demande Daïba — ${fn} ${ln}`,Prénom:fn,Nom:ln,Email:em,Téléphone:ph||'—'};
+  const fd=new FormData();
+  fd.append('_subject',`Nouvelle demande Daïba — ${fn} ${ln}`);
+  fd.append('Prénom',fn);fd.append('Nom',ln);fd.append('Email',em);fd.append('Téléphone',ph||'—');
   dCfg.steps.filter(s=>s.enabled).forEach(s=>{
-    if(s.type==='chips')p[s.label]=dSelVals[s.id]||'—';
-    if(s.type==='textarea'){const el=document.getElementById('dTA-'+s.id);p[s.label]=el?el.value.trim()||'—':'—';}
-    if(s.type==='text'){const el=document.getElementById('dTX-'+s.id);p[s.label]=el?el.value.trim()||'—':'—';}
-    if(s.type==='budget'){const sl=document.getElementById('dBS-'+s.id);if(sl)p[s.label]=+sl.value>=10000?'10 000 € et plus':+sl.value+' €';}
-    if(s.type==='photos'){const fds=dFileData[s.id]||[];p['Références jointes']=fds.length>0?`${fds.length} image(s)`:'Aucune';fds.forEach((f,i)=>{p[`Référence_${i+1}`]=`data:${f.type};base64,${f.base64}`;});}
+    if(s.type==='chips')fd.append(s.label,dSelVals[s.id]||'—');
+    if(s.type==='textarea'){const el=document.getElementById('dTA-'+s.id);fd.append(s.label,el?el.value.trim()||'—':'—');}
+    if(s.type==='text'){const el=document.getElementById('dTX-'+s.id);fd.append(s.label,el?el.value.trim()||'—':'—');}
+    if(s.type==='budget'){const sl=document.getElementById('dBS-'+s.id);if(sl)fd.append(s.label,+sl.value>=10000?'10 000 € et plus':+sl.value+' €');}
+    if(s.type==='photos'){
+      const fds=dFileData[s.id]||[];
+      fds.forEach((f,i)=>{
+        // Convertir base64 en Blob pour vrai fichier joint
+        const byteStr=atob(f.base64);
+        const arr=new Uint8Array(byteStr.length);
+        for(let j=0;j<byteStr.length;j++)arr[j]=byteStr.charCodeAt(j);
+        const blob=new Blob([arr],{type:f.type});
+        fd.append(`Photo_${i+1}`,blob,f.name);
+      });
+      if(fds.length===0)fd.append('Photos','Aucune référence jointe');
+    }
     if(s.type==='ringsize'){
       const unk=document.getElementById('dRUnk-'+s.id);
       const couple=document.getElementById('dRCouple-'+s.id);
       function halfVal(uid){const cb=document.getElementById('dRH-'+uid);return cb&&cb.checked?'.5':'';}
-      if(unk&&unk.checked){p[s.label]='Taille inconnue';}
+      if(unk&&unk.checked){fd.append(s.label,'Taille inconnue');}
       else if(couple&&couple.checked){
-        const f=document.getElementById('dRSelF-'+s.id);
-        const m=document.getElementById('dRSelM-'+s.id);
-        const fv=(f&&f.value)?(f.value+halfVal(s.id+'_f')):'—';
-        const mv=(m&&m.value)?(m.value+halfVal(s.id+'_m')):'—';
-        p[s.label+' Mme.']=fv;
-        p[s.label+' M.']=mv;
+        const rf=document.getElementById('dRSelF-'+s.id);
+        const rm=document.getElementById('dRSelM-'+s.id);
+        fd.append(s.label+' Mme.',(rf&&rf.value)?(rf.value+halfVal(s.id+'_f')):'—');
+        fd.append(s.label+' M.',(rm&&rm.value)?(rm.value+halfVal(s.id+'_m')):'—');
       } else {
         const sel=document.getElementById('dRSel-'+s.id);
-        const v=sel&&sel.value?sel.value+halfVal(s.id+'_s'):'—';
-        p[s.label]=v;
+        fd.append(s.label,sel&&sel.value?sel.value+halfVal(s.id+'_s'):'—');
       }
     }
   });
   const fb=document.getElementById('dFormBlock'),lb=document.getElementById('dLoadingBlock');
   fb.style.opacity='0.4';fb.style.pointerEvents='none';lb.style.display='block';
   try{
-    const res=await fetch(`https://formspree.io/f/${dCfg.formspreeId}`,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(p)});
+    const res=await fetch(`https://formspree.io/f/${dCfg.formspreeId}`,{method:'POST',headers:{Accept:'application/json'},body:fd});
     lb.style.display='none';
     if(res.ok){fb.style.display='none';const sb=document.getElementById('dSuccessBlock');sb.style.display='block';sb.scrollIntoView({behavior:'smooth',block:'start'});}
     else throw new Error();
