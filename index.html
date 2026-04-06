@@ -178,7 +178,7 @@
 
 <script>
 var D_CFG = {
-  pw:'daiba2024', formspreeId:'mnjolgar',
+  pw:'daiba2024', web3formsKey:'98595df5-db2a-4e35-9e13-eaab7c7dce62',
   title:'Lancez votre', titleEm:'projet',
   subtitle:"Décrivez le bijou que vous imaginez. Gautier vous recontacte personnellement pour donner vie à votre vision.",
   btn:'Envoyer ma demande', sucH:'Demande envoyée',
@@ -322,7 +322,7 @@ document.getElementById('dSendBtn').addEventListener('click',async()=>{
   if(!fn||!em){err.textContent='Merci de renseigner votre prénom et votre e-mail.';err.style.display='block';return;}
   if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent='Adresse e-mail invalide.';err.style.display='block';return;}
   const fd=new FormData();
-  fd.append('_subject',`Nouvelle demande Daïba — ${fn} ${ln}`);
+  
   fd.append('Prénom',fn);fd.append('Nom',ln);fd.append('Email',em);fd.append('Téléphone',ph||'—');
   dCfg.steps.filter(s=>s.enabled).forEach(s=>{
     if(s.type==='chips')fd.append(s.label,dSelVals[s.id]||'—');
@@ -360,7 +360,7 @@ document.getElementById('dSendBtn').addEventListener('click',async()=>{
   const fb=document.getElementById('dFormBlock'),lb=document.getElementById('dLoadingBlock');
   fb.style.opacity='0.4';fb.style.pointerEvents='none';lb.style.display='block';
   try{
-    const res=await fetch(`https://formspree.io/f/${dCfg.formspreeId}`,{method:'POST',headers:{Accept:'application/json'},body:fd});
+    fd.append('access_key',dCfg.web3formsKey);fd.append('subject',`Nouvelle demande Daïba — ${fn} ${ln}`);const res=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{Accept:'application/json'},body:fd});
     lb.style.display='none';
     if(res.ok){fb.style.display='none';const sb=document.getElementById('dSuccessBlock');sb.style.display='block';sb.scrollIntoView({behavior:'smooth',block:'start'});}
     else throw new Error();
