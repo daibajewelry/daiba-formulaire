@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Daïba — Lancez votre projet</title>
+<style>html,body{margin:0;padding:0;background:transparent;}</style>
+</head>
+<body>
+<style>
+#daiba-form-wrap{--gold:#C9A96E;--gold-light:#E8D5A8;--black:#0E0D0B;--surface2:#1C1A17;--surface3:#252320;--text:#F0EBE0;--text-muted:#8A8070;--border:rgba(201,169,110,0.2);--radius:2px;background:var(--black);color:var(--text);font-family:'Jost',sans-serif;font-weight:300;min-height:100vh;position:relative;overflow-x:hidden;}
+#daiba-form-wrap *{margin:0;padding:0;box-sizing:border-box;}
+#daiba-form-wrap::before{content:'';position:absolute;inset:0;background-image:radial-gradient(ellipse 80% 50% at 20% 20%,rgba(201,169,110,.04) 0%,transparent 60%),radial-gradient(ellipse 60% 60% at 80% 80%,rgba(201,169,110,.03) 0%,transparent 60%);pointer-events:none;z-index:0;}
+#daiba-form-wrap .d-container{max-width:780px;margin:0 auto;padding:60px 24px 100px;position:relative;z-index:1;}
+#daiba-form-wrap header{text-align:center;margin-bottom:64px;}
+#daiba-form-wrap .d-logo{font-family:'Cormorant Garamond',serif;font-size:11px;letter-spacing:.5em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;opacity:0;animation:dFadeUp .8s ease forwards .1s;}
+#daiba-form-wrap h1.d-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(36px,6vw,52px);font-weight:300;font-style:italic;line-height:1.1;margin-bottom:16px;opacity:0;animation:dFadeUp .8s ease forwards .25s;color:var(--text);}
+#daiba-form-wrap h1.d-h1 em{color:var(--gold);}
+#daiba-form-wrap .d-divider{width:40px;height:1px;background:var(--gold);margin:24px auto;opacity:0;animation:dFadeUp .8s ease forwards .35s;}
+#daiba-form-wrap .d-subtitle{font-size:13px;letter-spacing:.06em;color:var(--text-muted);line-height:1.8;max-width:480px;margin:0 auto;opacity:0;animation:dFadeUp .8s ease forwards .4s;}
+#daiba-form-wrap .d-step{margin-bottom:36px;opacity:0;animation:dFadeUp .7s ease forwards .5s;}
+#daiba-form-wrap .d-step-label{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:var(--gold);margin-bottom:12px;font-weight:400;}
+#daiba-form-wrap .d-step-label span{color:var(--text-muted);margin-left:8px;font-size:9px;}
+#daiba-form-wrap .d-chip-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:8px;}
+#daiba-form-wrap .d-chip{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;font-size:12px;letter-spacing:.05em;color:var(--text-muted);cursor:pointer;text-align:center;transition:all .2s;user-select:none;}
+#daiba-form-wrap .d-chip:hover{border-color:rgba(201,169,110,.45);color:var(--text);}
+#daiba-form-wrap .d-chip.active{background:rgba(201,169,110,.1);border-color:var(--gold);color:var(--gold-light);}
+#daiba-form-wrap input[type=text],#daiba-form-wrap input[type=email],#daiba-form-wrap input[type=tel],#daiba-form-wrap textarea{width:100%;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:14px 18px;color:var(--text);font-family:'Jost',sans-serif;font-weight:300;font-size:13px;letter-spacing:.03em;line-height:1.7;transition:border-color .3s;outline:none;}
+#daiba-form-wrap input::placeholder,#daiba-form-wrap textarea::placeholder{color:var(--text-muted);}
+#daiba-form-wrap input:focus,#daiba-form-wrap textarea:focus{border-color:rgba(201,169,110,.5);}
+#daiba-form-wrap textarea{resize:vertical;min-height:110px;}
+#daiba-form-wrap .d-input-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:520px){#daiba-form-wrap .d-input-row{grid-template-columns:1fr;}}
+#daiba-form-wrap .d-budget-display{font-family:'Cormorant Garamond',serif;font-size:30px;font-weight:300;color:var(--gold-light);margin-bottom:14px;}
+#daiba-form-wrap input[type=range]{-webkit-appearance:none;width:100%;height:2px;background:linear-gradient(to right,var(--gold) 0%,var(--gold) var(--pct,13%),var(--surface3) var(--pct,13%),var(--surface3) 100%);border-radius:1px;outline:none;cursor:pointer;}
+#daiba-form-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--gold);border:2px solid var(--black);cursor:pointer;transition:transform .2s;}
+#daiba-form-wrap input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2);}
+#daiba-form-wrap .d-budget-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text-muted);letter-spacing:.08em;margin-top:8px;}
+#daiba-form-wrap .d-upload-zone{border:1px dashed var(--border);background:var(--surface2);border-radius:var(--radius);padding:32px 24px;text-align:center;cursor:pointer;transition:border-color .3s,background .3s;position:relative;}
+#daiba-form-wrap .d-upload-zone:hover,#daiba-form-wrap .d-upload-zone.dragover{border-color:rgba(201,169,110,.5);background:var(--surface3);}
+#daiba-form-wrap .d-upload-zone input[type=file]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+#daiba-form-wrap .d-upload-icon{width:28px;height:28px;margin:0 auto 10px;color:var(--text-muted);}
+#daiba-form-wrap .d-upload-zone p{font-size:12px;color:var(--text-muted);pointer-events:none;}
+#daiba-form-wrap .d-upload-zone p strong{color:var(--gold-light);font-weight:400;}
+#daiba-form-wrap .d-preview-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px;margin-top:14px;}
+#daiba-form-wrap .d-preview-thumb{position:relative;aspect-ratio:1;border-radius:var(--radius);overflow:hidden;border:1px solid var(--border);}
+#daiba-form-wrap .d-preview-thumb img{width:100%;height:100%;object-fit:cover;opacity:.85;}
+#daiba-form-wrap .d-preview-thumb .d-del{position:absolute;top:4px;right:4px;width:22px;height:22px;border-radius:50%;background:rgba(14,13,11,.85);border:1px solid var(--border);color:var(--text-muted);font-size:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;line-height:1;}
+#daiba-form-wrap .d-upload-count{font-size:11px;color:var(--text-muted);margin-top:10px;letter-spacing:.08em;}
+#daiba-form-wrap .d-notice{background:rgba(201,169,110,.05);border:1px solid rgba(201,169,110,.15);border-radius:var(--radius);padding:13px 18px;font-size:11px;color:var(--text-muted);line-height:1.6;}
+#daiba-form-wrap .d-cta-btn{width:100%;padding:18px;background:transparent;border:1px solid var(--gold);color:var(--gold-light);font-family:'Jost',sans-serif;font-weight:300;font-size:11px;letter-spacing:.4em;text-transform:uppercase;cursor:pointer;border-radius:var(--radius);transition:color .3s;margin-top:8px;position:relative;overflow:hidden;}
+#daiba-form-wrap .d-cta-btn::before{content:'';position:absolute;inset:0;background:var(--gold);transform:scaleX(0);transform-origin:left;transition:transform .4s ease;z-index:0;}
+#daiba-form-wrap .d-cta-btn:hover::before{transform:scaleX(1);}
+#daiba-form-wrap .d-cta-btn:hover{color:var(--black);}
+#daiba-form-wrap .d-cta-btn span{position:relative;z-index:1;}
+#daiba-form-wrap .d-loading-block{display:none;text-align:center;padding:48px 24px;background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);margin-top:32px;}
+#daiba-form-wrap .d-spinner{width:28px;height:28px;border:1px solid var(--border);border-top-color:var(--gold);border-radius:50%;animation:dSpin 1.2s linear infinite;margin:0 auto 18px;}
+#daiba-form-wrap .d-loading-block p{font-size:11px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;}
+#daiba-form-wrap .d-success-block{display:none;text-align:center;padding:60px 32px;background:var(--surface2);border:1px solid rgba(201,169,110,.25);border-radius:var(--radius);margin-top:32px;}
+#daiba-form-wrap .d-success-icon{width:48px;height:48px;border:1px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 24px;color:var(--gold);font-size:20px;}
+#daiba-form-wrap .d-success-block h2{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:300;font-style:italic;color:var(--gold-light);margin-bottom:12px;}
+#daiba-form-wrap .d-success-block p{font-size:13px;color:var(--text-muted);line-height:1.7;max-width:380px;margin:0 auto 28px;}
+#daiba-form-wrap .d-reset-btn{background:none;border:none;color:var(--text-muted);font-family:'Jost',sans-serif;font-size:11px;letter-spacing:.15em;cursor:pointer;text-decoration:underline;text-underline-offset:3px;}
+#daiba-form-wrap .d-error-msg{display:none;background:rgba(180,60,60,.1);border:1px solid rgba(180,60,60,.3);border-radius:var(--radius);padding:13px 18px;font-size:12px;color:#E08080;margin-top:14px;text-align:center;}
+#daiba-form-wrap footer{text-align:center;margin-top:80px;padding-top:32px;border-top:1px solid var(--border);}
+#daiba-form-wrap .d-brand{font-family:'Cormorant Garamond',serif;font-size:13px;letter-spacing:.3em;color:var(--gold);margin-bottom:6px;display:block;}
+#daiba-form-wrap .d-fsub{font-size:10px;letter-spacing:.2em;color:var(--text-muted);text-transform:uppercase;}
+/* ADMIN TRIGGER */
+/* RING SIZE */
+#daiba-form-wrap .d-ring-wrap{display:flex;flex-direction:column;gap:12px;}
+#daiba-form-wrap .d-ring-row{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+#daiba-form-wrap .d-ring-check{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;font-size:12px;color:var(--text-muted);letter-spacing:.05em;}
+#daiba-form-wrap .d-ring-check input[type=checkbox]{width:16px;height:16px;accent-color:var(--gold);cursor:pointer;flex-shrink:0;}
+#daiba-form-wrap .d-ring-select{background:var(--surface2);border:1px solid var(--border);border-radius:var(--radius);padding:11px 14px;color:var(--text-muted);font-family:'Jost',sans-serif;font-size:12px;letter-spacing:.05em;outline:none;cursor:pointer;min-width:160px;transition:border-color .3s;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23C9A96E' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;}
+#daiba-form-wrap .d-ring-select:focus{border-color:rgba(201,169,110,.5);}
+#daiba-form-wrap .d-ring-select:disabled{opacity:.35;cursor:not-allowed;}
+#daiba-form-wrap .d-ring-label{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+#daiba-form-wrap .d-ring-couple{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:480px){#daiba-form-wrap .d-ring-couple{grid-template-columns:1fr;}}
+#dAdminTrigger{position:fixed;bottom:18px;right:18px;width:32px;height:32px;border-radius:50%;background:#1C1A17;border:1px solid rgba(201,169,110,0.2);cursor:pointer;display:flex;align-items:center;justify-content:center;z-index:9999;opacity:.3;transition:opacity .3s;}
+#dAdminTrigger:hover{opacity:1;}
+#dAdminTrigger svg{width:14px;height:14px;color:#C9A96E;}
+/* ADMIN OVERLAY */
+#dAdminOverlay{display:none;position:fixed;inset:0;background:rgba(8,7,6,.93);z-index:10000;overflow-y:auto;}
+#dAdminOverlay.visible{display:flex;align-items:flex-start;justify-content:center;padding:32px 12px 80px;}
+.d-admin-panel{background:#1C1A17;border:1px solid rgba(201,169,110,.2);border-radius:4px;width:100%;max-width:720px;font-family:'Jost',sans-serif;}
+.d-admin-panel *{box-sizing:border-box;}
+.d-admin-header{background:#252320;padding:18px 24px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(201,169,110,0.2);}
+.d-admin-header h2{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:300;font-style:italic;color:#E8D5A8;}
+.d-admin-close{background:none;border:none;color:#8A8070;font-size:22px;cursor:pointer;line-height:1;}
+.d-admin-tabs{display:flex;border-bottom:1px solid rgba(201,169,110,0.2);background:#252320;}
+.d-admin-tab{padding:12px 18px;font-size:10px;letter-spacing:.25em;text-transform:uppercase;color:#8A8070;cursor:pointer;border-bottom:2px solid transparent;transition:all .2s;}
+.d-admin-tab.active{color:#C9A96E;border-bottom-color:#C9A96E;}
+.d-login-wrap{padding:48px 28px;text-align:center;}
+.d-login-wrap p{font-size:12px;letter-spacing:.1em;color:#8A8070;margin-bottom:20px;text-transform:uppercase;}
+.d-login-wrap input{max-width:240px;text-align:center;letter-spacing:.2em;margin:0 auto 16px;display:block;background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:12px 16px;color:#F0EBE0;font-family:'Jost',sans-serif;font-size:13px;outline:none;width:100%;}
+.d-tab-pane{display:none;padding:24px;}
+.d-tab-pane.active{display:block;}
+.d-a-field{margin-bottom:16px;}
+.d-a-field label{display:block;font-size:10px;letter-spacing:.15em;color:#8A8070;text-transform:uppercase;margin-bottom:6px;}
+.d-a-field input,.d-a-field textarea{background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:10px 14px;color:#F0EBE0;font-family:'Jost',sans-serif;font-size:12px;width:100%;outline:none;}
+.d-a-field textarea{min-height:65px;resize:vertical;}
+.d-a-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.d-a-sec{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:#C9A96E;margin:24px 0 14px;padding-bottom:10px;border-bottom:1px solid rgba(201,169,110,0.2);}
+.d-a-sec:first-child{margin-top:0;}
+.d-color-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:12px;}
+.d-color-item{display:flex;align-items:center;gap:10px;background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:10px 12px;}
+.d-color-item input[type=color]{width:32px;height:32px;border:none;background:none;cursor:pointer;border-radius:50%;padding:0;flex-shrink:0;}
+.d-color-item span{font-size:11px;color:#8A8070;letter-spacing:.05em;}
+.d-chip-editor{display:flex;flex-direction:column;gap:7px;margin-bottom:10px;}
+.d-chip-item{display:flex;align-items:center;gap:8px;}
+.d-chip-item input{flex:1;background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:8px 12px;color:#F0EBE0;font-family:'Jost',sans-serif;font-size:12px;outline:none;}
+.d-icon-btn{width:26px;height:26px;border-radius:50%;background:none;border:1px solid rgba(180,60,60,.3);color:rgba(180,60,60,.6);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0;line-height:1;}
+.d-add-btn{background:none;border:1px dashed rgba(201,169,110,0.2);border-radius:2px;padding:8px;color:#8A8070;font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;width:100%;text-align:center;margin-top:4px;}
+.d-steps-list{display:flex;flex-direction:column;gap:10px;}
+.d-step-item{background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;overflow:hidden;}
+.d-step-item-header{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;user-select:none;}
+.d-drag-handle{color:#8A8070;font-size:14px;cursor:grab;flex-shrink:0;}
+.d-step-item-label{flex:1;font-size:12px;color:#F0EBE0;}
+.d-step-item-type{font-size:10px;color:#8A8070;text-transform:uppercase;flex-shrink:0;}
+.d-step-toggle{position:relative;width:36px;height:20px;flex-shrink:0;}
+.d-step-toggle input{opacity:0;width:0;height:0;position:absolute;}
+.d-step-toggle-track{position:absolute;inset:0;background:#1C1A17;border:1px solid rgba(201,169,110,0.2);border-radius:10px;transition:.3s;}
+.d-step-toggle input:checked+.d-step-toggle-track{background:rgba(201,169,110,.2);border-color:#C9A96E;}
+.d-step-toggle-track::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;background:#8A8070;top:3px;left:3px;transition:.3s;}
+.d-step-toggle input:checked+.d-step-toggle-track::after{transform:translateX(16px);background:#C9A96E;}
+.d-step-chevron{color:#8A8070;font-size:11px;transition:transform .2s;flex-shrink:0;}
+.d-step-chevron.open{transform:rotate(180deg);}
+.d-step-item-body{display:none;padding:14px;border-top:1px solid rgba(201,169,110,0.2);}
+.d-step-item-body.open{display:block;}
+.d-step-item-body .d-a-field input,.d-step-item-body .d-a-field textarea{background:#1C1A17;}
+.d-step-del-btn{background:none;border:1px solid rgba(180,60,60,.25);border-radius:2px;padding:7px 14px;color:rgba(180,60,60,.6);font-family:'Jost',sans-serif;font-size:10px;cursor:pointer;}
+.d-add-step-area{margin-top:16px;background:#252320;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:16px;}
+.d-add-step-area p{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#8A8070;margin-bottom:12px;}
+.d-step-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
+.d-step-type-btn{background:none;border:1px solid rgba(201,169,110,0.2);border-radius:2px;padding:12px 8px;color:#8A8070;font-family:'Jost',sans-serif;font-size:11px;cursor:pointer;text-align:center;}
+.d-step-type-btn small{display:block;font-size:9px;margin-top:4px;opacity:.6;}
+.d-save-bar{padding:16px 24px;border-top:1px solid rgba(201,169,110,0.2);display:flex;align-items:center;gap:12px;background:#252320;flex-wrap:wrap;}
+.d-save-btn{padding:13px 24px;background:#C9A96E;border:none;color:#0E0D0B;font-family:'Jost',sans-serif;font-weight:400;font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+.d-export-btn{padding:13px 24px;background:transparent;border:1px solid #C9A96E;color:#E8D5A8;font-family:'Jost',sans-serif;font-size:10px;letter-spacing:.3em;text-transform:uppercase;cursor:pointer;border-radius:2px;}
+.d-saved-msg{font-size:11px;color:#C9A96E;letter-spacing:.1em;opacity:0;transition:opacity .4s;margin-left:auto;}
+.d-saved-msg.show{opacity:1;}
+@keyframes dFadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+@keyframes dSpin{to{transform:rotate(360deg);}}
+</style>
+
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Jost:wght@200;300;400&display=swap" rel="stylesheet"/>
+
+<div id="daiba-form-wrap">
+  <div class="d-container">
+    <header>
+      <div class="d-logo" id="dLogo">Daïba Jewelry — Luxembourg</div>
+      <h1 class="d-h1" id="dH1">Lancez votre<br><em>projet</em></h1>
+      <div class="d-divider"></div>
+      <p class="d-subtitle" id="dSub">Décrivez le bijou que vous imaginez. Gautier vous recontacte personnellement pour donner vie à votre vision.</p>
+    </header>
+
+    <div id="dFormBlock">
+      <div class="d-step">
+        <div class="d-step-label">01 — Vos coordonnées</div>
+        <div class="d-input-row" style="margin-bottom:10px;">
+          <input type="text" id="dFirstName" placeholder="Prénom"/>
+          <input type="text" id="dLastName" placeholder="Nom"/>
+        </div>
+        <div class="d-input-row">
+          <input type="email" id="dEmail" placeholder="Adresse e-mail"/>
+          <input type="tel" id="dPhone" placeholder="Téléphone (optionnel)"/>
+        </div>
+      </div>
+      <div id="dDynSteps">
+<div class="d-step"><div class="d-step-label">02 — Références visuelles — screenshots, dessins, photos <span>optionnel</span></div><div class="d-upload-zone" id="dUZ-s1"><input type="file" id="dFI-s1" accept="image/*" multiple/><svg class="d-upload-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21V11M11 16l5-5 5 5"/><rect x="4" y="4" width="24" height="24" rx="2"/></svg><p><strong>Déposez vos images</strong> ou cliquez pour parcourir</p><p style="margin-top:5px;font-size:11px;">Jusqu'à 3 images</p></div><div class="d-preview-grid" id="dPG-s1"></div><div class="d-upload-count" id="dUC-s1"></div><div class="d-notice" style="margin-top:12px;">Vos images sont transmises avec votre demande. Gautier les recevra directement dans l'e-mail de contact.</div></div>
+<div class="d-step"><div class="d-step-label">03 — Type de bijou</div><div class="d-chip-grid" id="dCG-s2"><div class="d-chip" data-g="s2" data-v="Bague">Bague</div><div class="d-chip" data-g="s2" data-v="Collier">Collier</div><div class="d-chip" data-g="s2" data-v="Bracelet">Bracelet</div><div class="d-chip" data-g="s2" data-v="Boucles d'oreilles">Boucles d'oreilles</div><div class="d-chip" data-g="s2" data-v="Pendentif">Pendentif</div><div class="d-chip" data-g="s2" data-v="Alliance">Alliance</div><div class="d-chip" data-g="s2" data-v="Autre...">Autre...</div></div></div>
+<div class="d-step"><div class="d-step-label">04 — Métal <span>optionnel</span></div><div class="d-chip-grid" id="dCG-s3"><div class="d-chip" data-g="s3" data-v="Or jaune 18k/14k">Or jaune 18k/14k</div><div class="d-chip" data-g="s3" data-v="Or blanc 18k/14k">Or blanc 18k/14k</div><div class="d-chip" data-g="s3" data-v="Or rose 18k/14k">Or rose 18k/14k</div><div class="d-chip" data-g="s3" data-v="Argent 925">Argent 925</div><div class="d-chip" data-g="s3" data-v="Platine 950">Platine 950</div></div></div>
+<div class="d-step"><div class="d-step-label">05 — Décrivez votre bijou</div><textarea id="dTA-s4" placeholder="Ex : une bague solitaire élancé avec un diamant ovale (10mm) avec 3 diamants de chaque cotés, style Art déco ou encore elfique, etc......."></textarea></div>
+<div class="d-step"><div class="d-step-label">06 — Occasion <span>optionnel</span></div><div class="d-chip-grid" id="dCG-s5"><div class="d-chip" data-g="s5" data-v="Quotidien">Quotidien</div><div class="d-chip" data-g="s5" data-v="Fiançailles">Fiançailles</div><div class="d-chip" data-g="s5" data-v="Mariage">Mariage</div><div class="d-chip" data-g="s5" data-v="Anniversaire">Anniversaire</div><div class="d-chip" data-g="s5" data-v="Cadeau">Cadeau</div></div></div>
+<div class="d-step"><div class="d-step-label">07 — Budget indicatif <span>optionnel</span></div><div class="d-budget-display" id="dBD-s6">300 €</div><input type="range" id="dBS-s6" min="300" max="10000" step="100" value="300"/><div class="d-budget-labels"><span>300 €</span><span>10 000 €+</span></div></div>
+<div class="d-step"><div class="d-step-label">08 — Taille de doigt (EU) <span>optionnel</span></div><div class="d-ring-wrap" id="dRS-s7"><div class="d-ring-row"><label class="d-ring-check"><input type="checkbox" id="dRUnk-s7"/> Taille inconnue</label><label class="d-ring-check"><input type="checkbox" id="dRCouple-s7"/> Commande pour un couple</label></div><div id="dRSingle-s7"><select class="d-ring-select" id="dRSel-s7"><option value="">— Sélectionner une taille —</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><option value="60">60</option><option value="61">61</option><option value="62">62</option><option value="63">63</option><option value="64">64</option><option value="65">65</option><option value="66">66</option><option value="67">67</option><option value="68">68</option><option value="69">69</option><option value="70">70</option><option value="71">71</option><option value="72">72</option></select><label class="d-ring-check" id="dRHW-s7_s" style="display:none;margin-top:8px;"><input type="checkbox" id="dRH-s7_s"/> + demi-taille supérieure (ex: 55.5)</label></div><div id="dRCoupleSel-s7" style="display:none;"><div class="d-ring-couple"><div><div class="d-ring-label">Mme.</div><select class="d-ring-select" id="dRSelF-s7"><option value="">— Sélectionner —</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><option value="60">60</option><option value="61">61</option><option value="62">62</option><option value="63">63</option><option value="64">64</option><option value="65">65</option><option value="66">66</option><option value="67">67</option><option value="68">68</option><option value="69">69</option><option value="70">70</option><option value="71">71</option><option value="72">72</option></select><label class="d-ring-check" id="dRHW-s7_f" style="display:none;margin-top:8px;"><input type="checkbox" id="dRH-s7_f"/> + demi-taille supérieure (ex: 55.5)</label></div><div><div class="d-ring-label">M.</div><select class="d-ring-select" id="dRSelM-s7"><option value="">— Sélectionner —</option><option value="45">45</option><option value="46">46</option><option value="47">47</option><option value="48">48</option><option value="49">49</option><option value="50">50</option><option value="51">51</option><option value="52">52</option><option value="53">53</option><option value="54">54</option><option value="55">55</option><option value="56">56</option><option value="57">57</option><option value="58">58</option><option value="59">59</option><option value="60">60</option><option value="61">61</option><option value="62">62</option><option value="63">63</option><option value="64">64</option><option value="65">65</option><option value="66">66</option><option value="67">67</option><option value="68">68</option><option value="69">69</option><option value="70">70</option><option value="71">71</option><option value="72">72</option></select><label class="d-ring-check" id="dRHW-s7_m" style="display:none;margin-top:8px;"><input type="checkbox" id="dRH-s7_m"/> + demi-taille supérieure (ex: 55.5)</label></div></div></div></div></div></div>
+</div>
+      <button class="d-cta-btn" id="dSendBtn"><span id="dBtnLabel">Envoyer ma demande</span></button>
+      <div class="d-error-msg" id="dErrorMsg"></div>
+    </div>
+
+    <div class="d-loading-block" id="dLoadingBlock">
+      <div class="d-spinner"></div>
+      <p>Envoi de votre demande…</p>
+    </div>
+
+    <div class="d-success-block" id="dSuccessBlock">
+      <div class="d-success-icon">✓</div>
+      <h2 id="dSucH">Demande envoyée</h2>
+      <p id="dSucP">Merci pour votre confiance. Gautier vous recontactera dans les meilleurs délais pour discuter de votre projet.</p>
+      <button class="d-reset-btn" id="dResetBtn">← Soumettre une nouvelle demande</button>
+    </div>
+
+    <footer>
+      <span class="d-brand" id="dBrand">Daïba Jewelry</span>
+      <p class="d-fsub" id="dFsub">Bijoux sur mesure — Luxembourg</p>
+    </footer>
+  </div>
+</div>
+
+<button id="dAdminTrigger" title="Administration">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+  </svg>
+</button>
+
+<div id="dAdminOverlay">
+<div class="d-admin-panel">
+  <div class="d-admin-header">
+    <h2>Administration — Daïba</h2>
+    <button class="d-admin-close" id="dAdminClose">×</button>
+  </div>
+  <div class="d-login-wrap" id="dAdminLogin">
+    <p>Mot de passe administrateur</p>
+    <input type="password" id="dAdminPw" placeholder="••••••••"/>
+    <button class="d-save-btn" style="margin:12px auto 0;display:block;max-width:200px;width:100%;" onclick="dCheckPw()">Accéder</button>
+    <div style="font-size:11px;color:#E08080;margin-top:8px;display:none;" id="dAdminErr">Mot de passe incorrect.</div>
+  </div>
+  <div id="dAdminContent" style="display:none;">
+    <div class="d-admin-tabs">
+      <div class="d-admin-tab active" data-tab="texts">Textes</div>
+      <div class="d-admin-tab" data-tab="colors">Couleurs</div>
+      <div class="d-admin-tab" data-tab="steps">Étapes</div>
+      <div class="d-admin-tab" data-tab="config">Config</div>
+    </div>
+    <div class="d-tab-pane active" id="d-tab-texts">
+      <div class="d-a-sec">En-tête</div>
+      <div class="d-a-field"><label>Titre — ligne normale</label><input type="text" id="daTitle"/></div>
+      <div class="d-a-field"><label>Titre — mot doré</label><input type="text" id="daTitleEm"/></div>
+      <div class="d-a-field"><label>Sous-titre</label><textarea id="daSubtitle"></textarea></div>
+      <div class="d-a-sec">Formulaire</div>
+      <div class="d-a-field"><label>Texte du bouton</label><input type="text" id="daBtn"/></div>
+      <div class="d-a-sec">Confirmation</div>
+      <div class="d-a-row">
+        <div class="d-a-field"><label>Titre succès</label><input type="text" id="daSucH"/></div>
+        <div class="d-a-field"><label>Message succès</label><input type="text" id="daSucP"/></div>
+      </div>
+      <div class="d-a-sec">Pied de page</div>
+      <div class="d-a-row">
+        <div class="d-a-field"><label>Nom de marque</label><input type="text" id="daBrand"/></div>
+        <div class="d-a-field"><label>Sous-titre footer</label><input type="text" id="daFsub"/></div>
+      </div>
+    </div>
+    <div class="d-tab-pane" id="d-tab-colors">
+      <div class="d-a-sec">Palette</div>
+      <div class="d-color-grid" id="dColorGrid"></div>
+    </div>
+    <div class="d-tab-pane" id="d-tab-steps">
+      <p style="font-size:11px;color:#8A8070;margin-bottom:16px;line-height:1.6;">Glisse pour réordonner · Toggle pour activer/désactiver · Clique pour éditer</p>
+      <div class="d-steps-list" id="dStepsList"></div>
+      <div class="d-add-step-area">
+        <p>Ajouter une nouvelle étape</p>
+        <div class="d-step-type-grid">
+          <button class="d-step-type-btn" onclick="dAddStep('chips')">Choix multiple<small>chips</small></button>
+          <button class="d-step-type-btn" onclick="dAddStep('textarea')">Texte libre<small>description</small></button>
+          <button class="d-step-type-btn" onclick="dAddStep('text')">Champ texte<small>taille, date…</small></button>
+          <button class="d-step-type-btn" onclick="dAddStep('budget')">Slider budget<small>fourchette prix</small></button>
+          <button class="d-step-type-btn" onclick="dAddStep('photos')">Photos<small>upload images</small></button>
+          <button class="d-step-type-btn" onclick="dAddStep('info')">Bloc info<small>texte informatif</small></button>
+        </div>
+      </div>
+    </div>
+    <div class="d-tab-pane" id="d-tab-config">
+      <div class="d-a-sec">Formspree</div>
+      <div class="d-a-field"><label>ID Formspree</label><input type="text" id="daFormspree"/></div>
+      <div class="d-a-sec">Sécurité</div>
+      <div class="d-a-field"><label>Nouveau mot de passe</label><input type="password" id="daPw" placeholder="Laisser vide pour ne pas changer"/></div>
+    </div>
+  </div>
+  <div class="d-save-bar" id="dSaveBar" style="display:none;">
+    <button class="d-save-btn" onclick="dSaveAdmin()">Enregistrer</button>
+    <button class="d-export-btn" onclick="dExportHTML()">⬇ Télécharger pour Shopify</button>
+    <div class="d-saved-msg" id="dSavedMsg">✓ Enregistré</div>
+  </div>
+</div>
+</div>
+
+<script>
+var D_CFG = {
+  pw:'daiba2024', formspreeId:'mnjolgar',
+  title:'Lancez votre', titleEm:'projet',
+  subtitle:"Décrivez le bijou que vous imaginez. Gautier vous recontacte personnellement pour donner vie à votre vision.",
+  btn:'Envoyer ma demande', sucH:'Demande envoyée',
+  sucP:"Merci pour votre confiance. Gautier vous recontactera dans les meilleurs délais pour discuter de votre projet.",
+  brand:'Daïba Jewelry', fsub:'Bijoux sur mesure — Luxembourg',
+  colors:{'--gold':'#C9A96E','--gold-light':'#B8953A','--black':'#E9E9E9','--surface2':'#2E2C28','--surface3':'#343A40','--text':'#1A1A1A','--text-muted':'#C8B89D'},
+  steps:[
+    {id:'s1',type:'photos',enabled:true,optional:true,label:'Références visuelles — screenshots, dessins, photos',photoLimit:3,notice:"Vos images sont transmises avec votre demande. Gautier les recevra directement dans l'e-mail de contact."},
+    {id:'s2',type:'chips',enabled:true,optional:false,label:'Type de bijou',options:['Bague','Collier','Bracelet',"Boucles d'oreilles",'Pendentif','Alliance','Autre...']},
+    {id:'s3',type:'chips',enabled:true,optional:true,label:'Métal',options:['Or jaune 18k/14k','Or blanc 18k/14k','Or rose 18k/14k','Argent 925','Platine 950']},
+    {id:'s4',type:'textarea',enabled:true,optional:false,label:'Décrivez votre bijou',placeholder:"Ex : une bague solitaire élancé avec un diamant ovale (10mm) avec 3 diamants de chaque cotés, style Art déco ou encore elfique, etc......."},
+    {id:'s5',type:'chips',enabled:true,optional:true,label:'Occasion',options:['Quotidien','Fiançailles','Mariage','Anniversaire','Cadeau']},
+    {id:'s6',type:'budget',enabled:true,optional:true,label:'Budget indicatif',budgetMin:300,budgetMax:10000},
+    {id:'s7',type:'ringsize',enabled:true,optional:true,label:'Taille de doigt (EU)'}
+  ]
+};
+const D_COLOR_LABELS={'--gold':'Couleur principale (doré)','--gold-light':'Couleur principale claire','--black':'Fond de la page','--surface2':'Fond des champs','--surface3':'Fond secondaire','--text':'Texte principal','--text-muted':'Texte secondaire'};
+let dCfg=JSON.parse(JSON.stringify(D_CFG));
+const dSelVals={},dFileData={};
+let dDragSrc=null,dStepCtr=100;
+
+function dHex2Rgb(h){return parseInt(h.slice(1,3),16)+','+parseInt(h.slice(3,5),16)+','+parseInt(h.slice(5,7),16);}
+
+function dApply(){
+  const w=document.getElementById('daiba-form-wrap');
+  Object.entries(dCfg.colors).forEach(([k,v])=>w.style.setProperty(k,v));
+  w.style.setProperty('--border','rgba('+dHex2Rgb(dCfg.colors['--gold'])+',.2)');
+  document.getElementById('dH1').innerHTML=dCfg.title+'<br><em>'+dCfg.titleEm+'</em>';
+  document.getElementById('dSub').textContent=dCfg.subtitle;
+  document.getElementById('dBtnLabel').textContent=dCfg.btn;
+  document.getElementById('dSucH').textContent=dCfg.sucH;
+  document.getElementById('dSucP').textContent=dCfg.sucP;
+  document.getElementById('dBrand').textContent=dCfg.brand;
+  document.getElementById('dFsub').textContent=dCfg.fsub;
+  dRenderSteps();
+}
+
+function dRenderSteps(){
+  const c=document.getElementById('dDynSteps');c.innerHTML='';
+  dCfg.steps.filter(s=>s.enabled).forEach((step,i)=>{
+    const div=document.createElement('div');div.className='d-step';div.dataset.stepId=step.id;
+    div.innerHTML=`<div class="d-step-label">${String(i+2).padStart(2,'0')} — ${step.label}${step.optional?' <span>optionnel</span>':''}</div>`+dBuildContent(step);
+    c.appendChild(div);
+    if(step.type==='chips')dInitChips(div,step);
+    if(step.type==='budget')dInitSlider(div,step);
+    if(step.type==='photos')dInitUpload(div,step);
+    if(step.type==='ringsize')dInitRingSize(div,step);
+  });
+}
+
+const RING_SIZES = Array.from({length:28},(_,i)=>45+i); // 45 à 72 inclus
+function dRingSizeOptions(){return RING_SIZES.map(v=>`<option value="${v}">${v}</option>`).join('');}
+function dHalfChk(uid){return`<label class="d-ring-check" id="dRHW-${uid}" style="display:none;margin-top:8px;"><input type="checkbox" id="dRH-${uid}"/> + demi-taille supérieure (ex: 55.5)</label>`;}
+
+function dBuildContent(s){
+  if(s.type==='chips')return`<div class="d-chip-grid" id="dCG-${s.id}">${(s.options||[]).map(o=>`<div class="d-chip" data-g="${s.id}" data-v="${o}">${o}</div>`).join('')}</div>`;
+  if(s.type==='textarea')return`<textarea id="dTA-${s.id}" placeholder="${s.placeholder||''}"></textarea>`;
+  if(s.type==='text')return`<input type="text" id="dTX-${s.id}" placeholder="${s.placeholder||''}"/>`;
+  if(s.type==='info')return`<div class="d-notice">${s.content||''}</div>`;
+  if(s.type==='budget'){const mn=s.budgetMin||300,mx=s.budgetMax||10000;return`<div class="d-budget-display" id="dBD-${s.id}">${mn.toLocaleString('fr-FR')} €</div><input type="range" id="dBS-${s.id}" min="${mn}" max="${mx}" step="100" value="${mn}"/><div class="d-budget-labels"><span>${mn.toLocaleString('fr-FR')} €</span><span>${mx>=10000?'10 000 €+':mx.toLocaleString('fr-FR')+' €'}</span></div>`;}
+  if(s.type==='photos'){const lim=s.photoLimit||5;return`<div class="d-upload-zone" id="dUZ-${s.id}"><input type="file" id="dFI-${s.id}" accept="image/*" multiple/><svg class="d-upload-icon" viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21V11M11 16l5-5 5 5"/><rect x="4" y="4" width="24" height="24" rx="2"/></svg><p><strong>Déposez vos images</strong> ou cliquez pour parcourir</p><p style="margin-top:5px;font-size:11px;">Jusqu'à ${lim} image${lim>1?'s':''}</p></div><div class="d-preview-grid" id="dPG-${s.id}"></div><div class="d-upload-count" id="dUC-${s.id}"></div>${s.notice?`<div class="d-notice" style="margin-top:12px;">${s.notice}</div>`:''}`;}
+  if(s.type==='ringsize')return`
+    <div class="d-ring-wrap" id="dRS-${s.id}">
+      <div class="d-ring-row">
+        <label class="d-ring-check"><input type="checkbox" id="dRUnk-${s.id}"/> Taille inconnue</label>
+        <label class="d-ring-check"><input type="checkbox" id="dRCouple-${s.id}"/> Commande pour un couple</label>
+      </div>
+      <div id="dRSingle-${s.id}">
+        <select class="d-ring-select" id="dRSel-${s.id}">
+          <option value="">— Sélectionner une taille —</option>
+          ${dRingSizeOptions()}
+        </select>
+        ${dHalfChk(s.id+'_s')}
+      </div>
+      <div id="dRCoupleSel-${s.id}" style="display:none;">
+        <div class="d-ring-couple">
+          <div>
+            <div class="d-ring-label">Mme.</div>
+            <select class="d-ring-select" id="dRSelF-${s.id}">
+              <option value="">— Sélectionner —</option>
+              ${dRingSizeOptions()}
+            </select>
+            ${dHalfChk(s.id+'_f')}
+          </div>
+          <div>
+            <div class="d-ring-label">M.</div>
+            <select class="d-ring-select" id="dRSelM-${s.id}">
+              <option value="">— Sélectionner —</option>
+              ${dRingSizeOptions()}
+            </select>
+            ${dHalfChk(s.id+'_m')}
+          </div>
+        </div>
+      </div>
+    </div>`;
+  return'';
+}
+
+function dShowHalf(selId, wrapId){
+  const sel=document.getElementById(selId);
+  const wrap=document.getElementById(wrapId);
+  if(!sel||!wrap)return;
+  sel.addEventListener('change',()=>{wrap.style.display=sel.value?'block':'none';if(!sel.value){const cb=wrap.querySelector('input[type=checkbox]');if(cb)cb.checked=false;}});
+}
+
+function dInitRingSize(c,s){
+  const unk=c.querySelector(`#dRUnk-${s.id}`);
+  const couple=c.querySelector(`#dRCouple-${s.id}`);
+  const single=c.querySelector(`#dRSingle-${s.id}`);
+  const coupleSel=c.querySelector(`#dRCoupleSel-${s.id}`);
+  const sel=c.querySelector(`#dRSel-${s.id}`);
+  if(!unk)return;
+  // Demi-taille visibility
+  dShowHalf(`dRSel-${s.id}`,`dRHW-${s.id}_s`);
+  dShowHalf(`dRSelF-${s.id}`,`dRHW-${s.id}_f`);
+  dShowHalf(`dRSelM-${s.id}`,`dRHW-${s.id}_m`);
+  unk.addEventListener('change',()=>{
+    if(unk.checked){couple.checked=false;sel.disabled=true;sel.value='';sel.dispatchEvent(new Event('change'));coupleSel.style.display='none';single.style.display='block';}
+    else{sel.disabled=false;}
+  });
+  couple.addEventListener('change',()=>{
+    if(couple.checked){unk.checked=false;sel.disabled=false;single.style.display='none';coupleSel.style.display='block';}
+    else{single.style.display='block';coupleSel.style.display='none';}
+  });
+}
+
+function dInitChips(c,s){dSelVals[s.id]='';c.querySelectorAll('.d-chip').forEach(ch=>{ch.addEventListener('click',()=>{c.querySelectorAll(`.d-chip[data-g="${s.id}"]`).forEach(x=>x.classList.remove('active'));ch.classList.add('active');dSelVals[s.id]=ch.dataset.v;});});}
+
+function dInitSlider(c,s){const sl=c.querySelector(`#dBS-${s.id}`),dp=c.querySelector(`#dBD-${s.id}`);if(!sl)return;function u(){const mn=+sl.min,mx=+sl.max,v=+sl.value;sl.style.setProperty('--pct',((v-mn)/(mx-mn)*100)+'%');dp.textContent=v>=10000?'10 000 €+':v.toLocaleString('fr-FR')+' €';}sl.addEventListener('input',u);u();}
+
+function dInitUpload(c,s){dFileData[s.id]=[];const fi=c.querySelector(`#dFI-${s.id}`),uz=c.querySelector(`#dUZ-${s.id}`),pg=c.querySelector(`#dPG-${s.id}`),uc=c.querySelector(`#dUC-${s.id}`),lim=s.photoLimit||5;if(!fi)return;fi.addEventListener('change',e=>{dAddFiles(s.id,Array.from(e.target.files),lim,pg,uc);fi.value='';});uz.addEventListener('dragover',e=>{e.preventDefault();uz.classList.add('dragover');});uz.addEventListener('dragleave',()=>uz.classList.remove('dragover'));uz.addEventListener('drop',e=>{e.preventDefault();uz.classList.remove('dragover');dAddFiles(s.id,Array.from(e.dataTransfer.files).filter(f=>f.type.startsWith('image/')),lim,pg,uc);});}
+
+function dAddFiles(sid,list,lim,pg,uc){list.forEach(f=>{if(dFileData[sid].length>=lim)return;const r=new FileReader();r.onload=ev=>{dFileData[sid].push({name:f.name,base64:ev.target.result.split(',')[1],type:f.type,src:ev.target.result});dRenderPreviews(sid,pg,uc);};r.readAsDataURL(f);});}
+
+function dRenderPreviews(sid,pg,uc){pg.innerHTML='';dFileData[sid].forEach((f,i)=>{const d=document.createElement('div');d.className='d-preview-thumb';d.innerHTML=`<img src="${f.src}"/><button class="d-del" data-i="${i}">×</button>`;pg.appendChild(d);});pg.querySelectorAll('.d-del').forEach(b=>b.addEventListener('click',()=>{dFileData[sid].splice(+b.dataset.i,1);dRenderPreviews(sid,pg,uc);}));uc.textContent=dFileData[sid].length>0?`${dFileData[sid].length} image${dFileData[sid].length>1?'s':''} ajoutée${dFileData[sid].length>1?'s':''}`:'';};
+
+document.getElementById('dSendBtn').addEventListener('click',async()=>{
+  const fn=document.getElementById('dFirstName').value.trim(),ln=document.getElementById('dLastName').value.trim();
+  const em=document.getElementById('dEmail').value.trim(),ph=document.getElementById('dPhone').value.trim();
+  const err=document.getElementById('dErrorMsg');err.style.display='none';
+  if(!fn||!em){err.textContent='Merci de renseigner votre prénom et votre e-mail.';err.style.display='block';return;}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)){err.textContent='Adresse e-mail invalide.';err.style.display='block';return;}
+  const p={_subject:`Nouvelle demande Daïba — ${fn} ${ln}`,Prénom:fn,Nom:ln,Email:em,Téléphone:ph||'—'};
+  dCfg.steps.filter(s=>s.enabled).forEach(s=>{
+    if(s.type==='chips')p[s.label]=dSelVals[s.id]||'—';
+    if(s.type==='textarea'){const el=document.getElementById('dTA-'+s.id);p[s.label]=el?el.value.trim()||'—':'—';}
+    if(s.type==='text'){const el=document.getElementById('dTX-'+s.id);p[s.label]=el?el.value.trim()||'—':'—';}
+    if(s.type==='budget'){const sl=document.getElementById('dBS-'+s.id);if(sl)p[s.label]=+sl.value>=10000?'10 000 € et plus':+sl.value+' €';}
+    if(s.type==='photos'){const fds=dFileData[s.id]||[];p['Références jointes']=fds.length>0?`${fds.length} image(s)`:'Aucune';fds.forEach((f,i)=>{p[`Référence_${i+1}`]=`data:${f.type};base64,${f.base64}`;});}
+    if(s.type==='ringsize'){
+      const unk=document.getElementById('dRUnk-'+s.id);
+      const couple=document.getElementById('dRCouple-'+s.id);
+      function halfVal(uid){const cb=document.getElementById('dRH-'+uid);return cb&&cb.checked?'.5':'';}
+      if(unk&&unk.checked){p[s.label]='Taille inconnue';}
+      else if(couple&&couple.checked){
+        const f=document.getElementById('dRSelF-'+s.id);
+        const m=document.getElementById('dRSelM-'+s.id);
+        const fv=(f&&f.value)?(f.value+halfVal(s.id+'_f')):'—';
+        const mv=(m&&m.value)?(m.value+halfVal(s.id+'_m')):'—';
+        p[s.label+' Mme.']=fv;
+        p[s.label+' M.']=mv;
+      } else {
+        const sel=document.getElementById('dRSel-'+s.id);
+        const v=sel&&sel.value?sel.value+halfVal(s.id+'_s'):'—';
+        p[s.label]=v;
+      }
+    }
+  });
+  const fb=document.getElementById('dFormBlock'),lb=document.getElementById('dLoadingBlock');
+  fb.style.opacity='0.4';fb.style.pointerEvents='none';lb.style.display='block';
+  try{
+    const res=await fetch(`https://formspree.io/f/${dCfg.formspreeId}`,{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify(p)});
+    lb.style.display='none';
+    if(res.ok){fb.style.display='none';const sb=document.getElementById('dSuccessBlock');sb.style.display='block';sb.scrollIntoView({behavior:'smooth',block:'start'});}
+    else throw new Error();
+  }catch{lb.style.display='none';fb.style.opacity='1';fb.style.pointerEvents='auto';err.textContent="L'envoi a échoué. Veuillez réessayer.";err.style.display='block';}
+});
+
+document.getElementById('dResetBtn').addEventListener('click',()=>{
+  document.getElementById('dSuccessBlock').style.display='none';
+  const fb=document.getElementById('dFormBlock');fb.style.display='block';fb.style.opacity='1';fb.style.pointerEvents='auto';
+  ['dFirstName','dLastName','dEmail','dPhone'].forEach(id=>document.getElementById(id).value='');
+  window.scrollTo({top:0,behavior:'smooth'});dApply();
+});
+
+/* ADMIN */
+document.getElementById('dAdminTrigger').addEventListener('click',()=>{document.getElementById('dAdminOverlay').classList.add('visible');setTimeout(()=>document.getElementById('dAdminPw').focus(),100);});
+document.getElementById('dAdminClose').addEventListener('click',dCloseAdmin);
+document.getElementById('dAdminOverlay').addEventListener('click',e=>{if(e.target.id==='dAdminOverlay')dCloseAdmin();});
+document.getElementById('dAdminPw').addEventListener('keydown',e=>{if(e.key==='Enter')dCheckPw();});
+function dCloseAdmin(){document.getElementById('dAdminOverlay').classList.remove('visible');document.getElementById('dAdminLogin').style.display='block';document.getElementById('dAdminContent').style.display='none';document.getElementById('dSaveBar').style.display='none';document.getElementById('dAdminPw').value='';document.getElementById('dAdminErr').style.display='none';}
+function dCheckPw(){if(document.getElementById('dAdminPw').value===dCfg.pw){document.getElementById('dAdminLogin').style.display='none';document.getElementById('dAdminContent').style.display='block';document.getElementById('dSaveBar').style.display='flex';dPopulateAdmin();}else{document.getElementById('dAdminErr').style.display='block';document.getElementById('dAdminPw').value='';}}
+document.querySelectorAll('.d-admin-tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.d-admin-tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.d-tab-pane').forEach(x=>x.classList.remove('active'));t.classList.add('active');document.getElementById('d-tab-'+t.dataset.tab).classList.add('active');}));
+
+function dPopulateAdmin(){
+  document.getElementById('daTitle').value=dCfg.title;document.getElementById('daTitleEm').value=dCfg.titleEm;
+  document.getElementById('daSubtitle').value=dCfg.subtitle;document.getElementById('daBtn').value=dCfg.btn;
+  document.getElementById('daSucH').value=dCfg.sucH;document.getElementById('daSucP').value=dCfg.sucP;
+  document.getElementById('daBrand').value=dCfg.brand;document.getElementById('daFsub').value=dCfg.fsub;
+  document.getElementById('daFormspree').value=dCfg.formspreeId;
+  dBuildColors();dBuildStepsEditor();
+}
+
+function dBuildColors(){
+  const g=document.getElementById('dColorGrid');g.innerHTML='';
+  Object.entries(dCfg.colors).forEach(([k,v])=>{
+    const d=document.createElement('div');d.className='d-color-item';
+    d.innerHTML=`<input type="color" value="${v}" data-var="${k}"/><span>${D_COLOR_LABELS[k]||k}</span>`;
+    d.querySelector('input').addEventListener('input',e=>{dCfg.colors[k]=e.target.value;document.getElementById('daiba-form-wrap').style.setProperty(k,e.target.value);if(k==='--gold')document.getElementById('daiba-form-wrap').style.setProperty('--border','rgba('+dHex2Rgb(e.target.value)+',.2)');});
+    g.appendChild(d);
+  });
+}
+
+function dBuildStepsEditor(){
+  const list=document.getElementById('dStepsList');list.innerHTML='';
+  const TL={chips:'Choix multiple',textarea:'Texte libre',text:'Champ texte',budget:'Slider budget',photos:'Photos',info:'Bloc info'};
+  dCfg.steps.forEach((step,idx)=>{
+    const item=document.createElement('div');item.className='d-step-item';item.dataset.idx=idx;item.setAttribute('draggable','true');
+    let body=`<div class="d-a-field"><label>Intitulé</label><input type="text" class="dse-label" value="${step.label||''}"/></div>`;
+    body+=`<div class="d-a-field"><label><input type="checkbox" class="dse-opt" ${step.optional?'checked':''} style="width:auto;margin-right:6px;accent-color:#C9A96E"/>Marquer comme optionnel</label></div>`;
+    if(step.type==='chips'){const ch=(step.options||[]).map(o=>`<div class="d-chip-item"><input type="text" class="dse-chip" value="${o}"/><button class="d-icon-btn dse-chip-del">×</button></div>`).join('');body+=`<div class="d-a-field"><label>Options</label><div class="d-chip-editor dse-chip-list">${ch}</div><button class="d-add-btn dse-chip-add">+ Ajouter une option</button></div>`;}
+    if(step.type==='textarea'||step.type==='text')body+=`<div class="d-a-field"><label>Placeholder</label><input type="text" class="dse-ph" value="${step.placeholder||''}"/></div>`;
+    if(step.type==='info')body+=`<div class="d-a-field"><label>Contenu</label><textarea class="dse-ct">${step.content||''}</textarea></div>`;
+    if(step.type==='budget')body+=`<div class="d-a-row"><div class="d-a-field"><label>Min (€)</label><input type="number" class="dse-bmin" value="${step.budgetMin||300}"/></div><div class="d-a-field"><label>Max (€)</label><input type="number" class="dse-bmax" value="${step.budgetMax||10000}"/></div></div>`;
+    if(step.type==='photos')body+=`<div class="d-a-field"><label>Max images</label><input type="number" class="dse-plim" value="${step.photoLimit||5}" min="1" max="10"/></div><div class="d-a-field"><label>Notice</label><textarea class="dse-notice">${step.notice||''}</textarea></div>`;
+    body+=`<div style="margin-top:10px;"><button class="d-step-del-btn">Supprimer cette étape</button></div>`;
+    item.innerHTML=`<div class="d-step-item-header"><span class="d-drag-handle">⠿</span><span class="d-step-item-label">${step.label}</span><span class="d-step-item-type">${TL[step.type]||step.type}</span><label class="d-step-toggle"><input type="checkbox" ${step.enabled?'checked':''}><div class="d-step-toggle-track"></div></label><span class="d-step-chevron">▾</span></div><div class="d-step-item-body">${body}</div>`;
+    item.querySelector('.d-step-toggle input').addEventListener('change',e=>dCfg.steps[idx].enabled=e.target.checked);
+    item.querySelector('.d-step-item-header').addEventListener('click',e=>{if(e.target.closest('.d-step-toggle')||e.target.closest('.d-drag-handle'))return;item.querySelector('.d-step-item-body').classList.toggle('open');item.querySelector('.d-step-chevron').classList.toggle('open');});
+    item.addEventListener('dragstart',()=>{dDragSrc=item;item.style.opacity='0.5';});
+    item.addEventListener('dragend',()=>item.style.opacity='1');
+    item.addEventListener('dragover',e=>e.preventDefault());
+    item.addEventListener('drop',e=>{e.preventDefault();if(dDragSrc===item)return;const si=+dDragSrc.dataset.idx,di=+item.dataset.idx;const tmp=dCfg.steps.splice(si,1)[0];dCfg.steps.splice(di,0,tmp);dBuildStepsEditor();});
+    item.querySelector('.d-step-del-btn').addEventListener('click',()=>{dCfg.steps.splice(idx,1);dBuildStepsEditor();});
+    dWireStep(item,step,idx);
+    list.appendChild(item);
+  });
+}
+
+function dWireStep(item,step,idx){
+  const lbl=item.querySelector('.dse-label');if(lbl)lbl.addEventListener('input',e=>{dCfg.steps[idx].label=e.target.value;item.querySelector('.d-step-item-label').textContent=e.target.value;});
+  const opt=item.querySelector('.dse-opt');if(opt)opt.addEventListener('change',e=>dCfg.steps[idx].optional=e.target.checked);
+  const ph=item.querySelector('.dse-ph');if(ph)ph.addEventListener('input',e=>dCfg.steps[idx].placeholder=e.target.value);
+  const ct=item.querySelector('.dse-ct');if(ct)ct.addEventListener('input',e=>dCfg.steps[idx].content=e.target.value);
+  const bmin=item.querySelector('.dse-bmin'),bmax=item.querySelector('.dse-bmax');
+  if(bmin)bmin.addEventListener('input',e=>dCfg.steps[idx].budgetMin=+e.target.value);
+  if(bmax)bmax.addEventListener('input',e=>dCfg.steps[idx].budgetMax=+e.target.value);
+  const pl=item.querySelector('.dse-plim');if(pl)pl.addEventListener('input',e=>dCfg.steps[idx].photoLimit=+e.target.value);
+  const nt=item.querySelector('.dse-notice');if(nt)nt.addEventListener('input',e=>dCfg.steps[idx].notice=e.target.value);
+  const cl=item.querySelector('.dse-chip-list');
+  if(cl){
+    function sync(){dCfg.steps[idx].options=[...cl.querySelectorAll('.dse-chip')].map(i=>i.value.trim()).filter(Boolean);}
+    cl.querySelectorAll('.dse-chip').forEach(ci=>ci.addEventListener('input',sync));
+    cl.querySelectorAll('.dse-chip-del').forEach(b=>b.addEventListener('click',()=>{b.closest('.d-chip-item').remove();sync();}));
+    const ab=item.querySelector('.dse-chip-add');
+    if(ab)ab.addEventListener('click',()=>{const d=document.createElement('div');d.className='d-chip-item';d.innerHTML=`<input type="text" class="dse-chip" placeholder="Option…"/><button class="d-icon-btn dse-chip-del">×</button>`;d.querySelector('.dse-chip').addEventListener('input',sync);d.querySelector('.dse-chip-del').addEventListener('click',()=>{d.remove();sync();});cl.appendChild(d);});
+  }
+}
+
+function dAddStep(type){
+  const labels={chips:'Nouveau choix',textarea:'Description',text:'Champ texte',budget:'Budget',photos:'Références visuelles',info:'Information'};
+  const s={id:'sc'+(dStepCtr++),type,enabled:true,optional:true,label:labels[type]||'Étape'};
+  if(type==='chips')s.options=['Option 1','Option 2'];
+  if(type==='budget'){s.budgetMin=300;s.budgetMax=10000;}
+  if(type==='photos'){s.photoLimit=5;s.notice='';}
+  if(type==='textarea'||type==='text')s.placeholder='';
+  if(type==='info')s.content='';
+  dCfg.steps.push(s);dBuildStepsEditor();
+}
+
+function dSaveAdmin(){
+  dCfg.title=document.getElementById('daTitle').value.trim()||dCfg.title;
+  dCfg.titleEm=document.getElementById('daTitleEm').value.trim()||dCfg.titleEm;
+  dCfg.subtitle=document.getElementById('daSubtitle').value.trim()||dCfg.subtitle;
+  dCfg.btn=document.getElementById('daBtn').value.trim()||dCfg.btn;
+  dCfg.sucH=document.getElementById('daSucH').value.trim()||dCfg.sucH;
+  dCfg.sucP=document.getElementById('daSucP').value.trim()||dCfg.sucP;
+  dCfg.brand=document.getElementById('daBrand').value.trim()||dCfg.brand;
+  dCfg.fsub=document.getElementById('daFsub').value.trim()||dCfg.fsub;
+  dCfg.formspreeId=document.getElementById('daFormspree').value.trim()||dCfg.formspreeId;
+  const np=document.getElementById('daPw').value.trim();if(np)dCfg.pw=np;
+  document.getElementById('daPw').value='';
+  dApply();
+  const s=document.getElementById('dSavedMsg');s.classList.add('show');setTimeout(()=>s.classList.remove('show'),2500);
+}
+
+function dExportHTML(){
+  dSaveAdmin();
+  const src=document.documentElement.outerHTML;
+  const json=JSON.stringify(dCfg,null,2);
+  const out=src.replace(/var D_CFG = \{[\s\S]*?\};(\s*const D_COLOR)/,'var D_CFG = '+json+';\n$1');
+  const blob=new Blob([out],{type:'text/html;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download='daiba-shopify.html';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);URL.revokeObjectURL(url);
+}
+
+// Init robuste — compatible Shopify (un seul bloc script)
+function dInit(){
+  if(document.getElementById('daiba-form-wrap')) dApply();
+}
+if(document.readyState==='loading'){
+  document.addEventListener('DOMContentLoaded', dInit);
+} else {
+  dInit();
+}
+window.addEventListener('load', function(){
+  var s=document.getElementById('dDynSteps');
+  if(s && s.children.length===0) dApply();
+});
+</script>
+
+</body>
+</html>
